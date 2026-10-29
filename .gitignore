@@ -1,0 +1,27 @@
+# Terraform downloaded providers and modules
+.terraform/
+
+# Terraform local state
+*.tfstate
+*.tfstate.*
+
+# Saved Terraform execution plans
+tfplan
+*.tfplan
+
+# Sensitive variable files
+*.tfvars
+*.tfvars.json
+
+# Terraform temporary files
+.terraform.tfstate.lock.info
+crash.log
+crash.*.log
+
+# Local credentials and environment files
+.env
+*.pem
+*.key
+
+# macOS
+.DS_Store
