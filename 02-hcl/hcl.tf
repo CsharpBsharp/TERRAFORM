@@ -28,9 +28,9 @@ terraform {
     # This bucket was created in 00-bootstrap-state project
     bucket = "cb-tfstate-966662773876-us-east-2"
     # You cannot create a new bucket it must exist 
-    key          = "prod/terraform.tfstate" # Path inside the bucket to store the file
-    region       = "us-east-2"              # AWS Region where the bucket resides
-    encrypt      = true                     # Enables AES-256 server-side encryption
+    key     = "prod/terraform.tfstate" # Path inside the bucket to store the file
+    region  = "us-east-2"              # AWS Region where the bucket resides
+    encrypt = true                     # Enables AES-256 server-side encryption
     use_lockfile = true
     # dynamodb_table is deprecated and use_lockfile should be used instead 
     # dynamodb_table = "terraform-lock-table"            # Optional: Used for state locking to prevent conflicts
@@ -50,11 +50,40 @@ resource "random_id" "bucket_suffix" {
   byte_length = 6
 }
 
+# variable is used for input values normally
+variable "my_bucket" {
+  type = string
+  
+  description = "The bucket name that I will be using"
+  default = "example-bucket-010203040506"
+}
+
 # We will now create s3 bucket and make use of that random string 
 resource "aws_s3_bucket" "example-bucket" {
-  bucket = "example-bucket-${random_id.bucket_suffix.hex}"
+    bucket = var.my_bucket
+    # bucket = "example-bucket-${random_id.bucket_suffix.hex}"
 }
+
+# This kind of block is used for externally managed resource or resource managed by other terraform projects
+data "aws_s3_bucket" "externally_managed_resource" {
+  bucket = "my-external-bucket"
+}
+
+
+# locals is used as variables as well but purpose is different than variable as this is not input 
+# it is more like temporary placeholders we use within functions it doesn't need to be input or return value
+# it is normally used for complex manipulation of data
+locals {
+  
+}
+
+# module block is used to create a module which can be used by other projects 
+#module "my_first_module" {
+  
+#}
+
 
 output "bucket_name" {
   value = aws_s3_bucket.example-bucket.bucket
 }
+
